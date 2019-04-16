@@ -8,21 +8,20 @@ function [assignedClusters,centroidLocations] = spectralKmeans(dataPoints, numCl
     
     for dataIdx1 = 1:numDataPoints
         for dataIdx2 = dataIdx1:numDataPoints
+            
+            score = 0;
+            if dataIdx1 ~= dataIdx2
+            
             % compute distance between 2 points
             diff = dataPoints(dataIdx1,:) - dataPoints(dataIdx2,:);
             dist = sqrt(sum(diff.*diff,2));
             
             % closer is better
-            
-            if dist == 0;
-                score = 1;
-            end
             score = inv(dist);
-            if score > 0.1
-                score = 1;
-            else
-                score = 0;
+            
             end
+
+
             
             adjacencyMatrix(dataIdx1, dataIdx2) = score;
             adjacencyMatrix(dataIdx2, dataIdx1) = score;
