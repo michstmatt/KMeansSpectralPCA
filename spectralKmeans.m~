@@ -4,7 +4,7 @@ function [assignedClusters,centroidLocations] = spectralKmeans(dataPoints, numCl
     [numDataPoints, numFeatures] = size(dataPoints);
     
     adjacencyMatrix = zeros(numDataPoints, numDataPoints);
-    
+    degreeVector = zeros(numDataPoints,1);
     
     for dataIdx1 = 1:numDataPoints
         for dataIdx2 = dataIdx1:numDataPoints
@@ -22,13 +22,18 @@ function [assignedClusters,centroidLocations] = spectralKmeans(dataPoints, numCl
 
             adjacencyMatrix(dataIdx1, dataIdx2) = score;
             adjacencyMatrix(dataIdx2, dataIdx1) = score;
+            
+            dScore = 0;
+            if score > 0:
+                dScore = 1;
+            end
+            
+                
+            
         end
     end
     
-    
-    binaryAdjMatrix = adjacencyMatrix > 0;
-    degreeVector = sum(binaryAdjMatrix,1);
-    
+    %degreeVector = sum(adjacencyMatrix,1);
     degreeMatrix = diag(degreeVector);
     
     laplacianMatrix = degreeMatrix - adjacencyMatrix;
@@ -41,7 +46,7 @@ function [assignedClusters,centroidLocations] = spectralKmeans(dataPoints, numCl
     values = diag(dValues);
     
     % get the largest eigen value and corresponding index
-    [sortedVals, indices] = sort(values,'ascend');
+    [sortedVals, indices] = sort(values,'descend');
     
     % get first numPCs indices
     selectedIndices = indices(1:numPCs);
